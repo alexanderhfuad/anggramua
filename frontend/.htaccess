@@ -1,26 +1,38 @@
 <IfModule mod_rewrite.c>
+  Options +FollowSymLinks -MultiViews
   RewriteEngine On
-  
+  RewriteBase /
+  DirectoryIndex index.html
+
+  # Allow access to everything in this directory
+  <IfModule mod_authz_core.c>
+    Require all granted
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Allow from all
+  </IfModule>
+
   # Remove .html extension from URLs
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule ^([^\.]+)$ $1.html [NC,L]
-  
+
   # SPA Routing - Redirect all requests to index.html except for actual files/folders
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteCond %{REQUEST_URI} !^/index\.html$
   RewriteRule ^ /index.html [QSA,L]
-  
+
   # Set proper MIME types
   AddType text/javascript js
   AddType text/css css
-  
+
   # Gzip compression
   <IfModule mod_deflate.c>
     AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
   </IfModule>
-  
+
   # Cache control
   <IfModule mod_expires.c>
     ExpiresActive On

@@ -23,13 +23,15 @@ Folder `frontend/dist` berisi file production yang siap deploy.
 2. Navigasi ke folder **public_html** (untuk domain utama) atau subfolder untuk subdomain
 3. Hapus file lama jika ada
 4. Upload seluruh isi folder `dist` ke folder tersebut
-5. **Penting**: Upload file `.htaccess` dari folder `frontend/`
+   - Jangan upload folder `dist` sendiri. Upload file dan folder dari dalam `dist` langsung ke `public_html`.
+5. **Penting**: Upload file `.htaccess` yang ada di `frontend/public/` atau pastikan file `.htaccess` ada di root `dist` setelah build.
 
 #### Opsi B: Menggunakan FTP
 1. Gunakan FTP client (FileZilla, WinSCP, dll)
 2. Connect ke server Hostinger dengan credentials Anda
 3. Navigate ke `public_html` atau folder subdomain
 4. Upload seluruh isi folder `dist`
+   - Jika Anda mengupload direktori `dist`, pastikan isinya berada di `public_html`, bukan `public_html/dist`.
 5. Pastikan file `.htaccess` terupload
 
 #### Opsi C: Menggunakan Git Deployment (Jika tersedia)

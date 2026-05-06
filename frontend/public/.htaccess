@@ -1,16 +1,46 @@
-# Allow access to static files in public folder
 <IfModule mod_rewrite.c>
-  RewriteEngine Off
-</IfModule>
+  Options +FollowSymLinks -MultiViews
+  RewriteEngine On
+  RewriteBase /
+  DirectoryIndex index.html
 
-<IfModule mod_expires.c>
-  ExpiresActive On
-  ExpiresDefault "access plus 1 month"
-  ExpiresByType image/png "access plus 1 month"
-  ExpiresByType image/jpeg "access plus 1 month"
-  ExpiresByType image/gif "access plus 1 month"
-  ExpiresByType application/xml "access plus 1 week"
-  ExpiresByType text/xml "access plus 1 week"
-  ExpiresByType application/pdf "access plus 1 week"
-  ExpiresByType text/plain "access plus 1 week"
+  # Allow access to everything in this directory
+  <IfModule mod_authz_core.c>
+    Require all granted
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Allow from all
+  </IfModule>
+
+  # Remove .html extension from URLs
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^([^\.]+)$ $1.html [NC,L]
+
+  # SPA Routing - Redirect all requests to index.html except for actual files/folders
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_URI} !^/index\.html$
+  RewriteRule ^ /index.html [QSA,L]
+
+  # Set proper MIME types
+  AddType text/javascript js
+  AddType text/css css
+
+  # Gzip compression
+  <IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
+  </IfModule>
+
+  # Cache control
+  <IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresDefault "access plus 1 week"
+    ExpiresByType text/html "access plus 1 hour"
+    ExpiresByType application/javascript "access plus 1 week"
+    ExpiresByType text/css "access plus 1 week"
+    ExpiresByType image/png "access plus 1 week"
+    ExpiresByType image/jpeg "access plus 1 week"
+  </IfModule>
 </IfModule>
