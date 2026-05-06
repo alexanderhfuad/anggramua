@@ -6,10 +6,12 @@ export default defineConfig({
   build: {
     outDir: "dist",
     sourcemap: false,
-    minify: "terser",
-    terserOptions: {
-      compress: {
-        drop_console: true
+    minify: "esbuild",
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          react: ["react", "react-dom"]
+        }
       }
     }
   },
